@@ -29,19 +29,14 @@
               :search="search"
               @click:row="editItem"
             ></v-data-table>
-            <ItemDialogSell
-              :opened="dialogVisible"
-              :item="selectedItem"
-              @refresh="refreshList"
-            ></ItemDialogSell>
           </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
-
 <script>
+import api from "../api";
 export default {
   name: "AnswerList",
   data(){
@@ -66,6 +61,17 @@ export default {
   created() {
     this.question = this.$route.query.question;
     this.refreshList();
+  },
+  methods: {
+    editItem(item) {
+      this.selectedItem = item;
+      this.dialogVisible = true;
+    },
+    async refreshList() {
+      this.dialogVisible = false;
+      this.selectedItem = {};
+      this.items = await api.items.allItems();
+    },
   },
 };
 </script>

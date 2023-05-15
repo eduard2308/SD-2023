@@ -7,7 +7,6 @@
             <span class="headline">Answers</span>
           </v-card-title>
           <h1>{{ this.question.title }}</h1>
-          <h2>{{ this.question.author.username }}</h2>
           <h2>{{ this.question.text }}</h2>
           <v-card-text>
             <v-container>
@@ -28,12 +27,12 @@
                 :items="items"
                 :search="search"
                 @click:row="editAnswer"
-            ></v-data-table>
+            ></v-data-table><!--
             <AnswerDialog
                 :opened="dialogVisible"
                 :item="selectedItem"
                 @refresh="refreshList"
-            ></AnswerDialog>
+            ></AnswerDialog>-->
           </v-card-text>
         </v-card>
       </v-flex>

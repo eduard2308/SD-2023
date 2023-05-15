@@ -9,7 +9,6 @@
         <v-toolbar color="primary" dark> Edit question </v-toolbar>
         <v-form>
           <v-text-field v-model="item.title" label="Title" />
-          <v-text-field v-model="item.author.username" label="Author" />
           <v-text-field v-model="item.text" label="Text" />
           <v-text-field v-model="item.tag" label="Tag" />
           <v-text-field v-model="item.date" label="Date" />
