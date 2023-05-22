@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-      transition="dialog-bottom-transition"
-      max-width="600"
-      :value="opened"
+    transition="dialog-bottom-transition"
+    max-width="600"
+    :value="opened"
   >
     <template>
       <v-card>
@@ -10,6 +10,11 @@
         <v-form>
           <v-text-field v-model="item.title" label="Title" />
           <v-text-field v-model="item.text" label="Text" />
+          <v-file-input
+            v-model="imageFile"
+            label="Image"
+            @change="onFileSelected"
+          />
           <v-text-field v-model="item.tag" label="Tag" />
           <v-text-field v-model="item.date" label="Date" />
         </v-form>
@@ -35,17 +40,26 @@ export default {
     item: Object,
     opened: Boolean,
   },
+  data() {
+    return {
+      imageFile: null,
+      formData: new FormData(),
+    };
+  },
   methods: {
+    onFileSelected(event) {
+      this.imageFile = event.target.files[0];
+    },
     remove() {
       api.itemsAdmin
-          .remove({
-            id: this.item.id,
-            title: this.item.title,
-            tag: this.item.tag,
-            text: this.item.text,
-            date: this.item.date,
-          })
-          .then(() => this.$emit("refresh"));
+        .remove({
+          id: this.item.id,
+          title: this.item.title,
+          tag: this.item.tag,
+          text: this.item.text,
+          date: this.item.date,
+        })
+        .then(() => this.$emit("refresh"));
     },
     seeAnswers() {
       router.push({
@@ -54,14 +68,10 @@ export default {
       });
     },
     persist() {
-      api.itemsAdmin
-          .edit({
-            id: this.item.id,
-            title: this.item.title,
-            text: this.item.text,
-            tag: this.item.tag,
-          })
-          .then(() => this.$emit("refresh"));
+      this.formData.set("image", this.imageFile);
+      this.formData.set("id", this.item.id);
+      this.formData.set("question", JSON.stringify(this.item));
+      api.itemsAdmin.edit(this.formData).then(() => this.$emit("refresh"));
     },
   },
   computed: {

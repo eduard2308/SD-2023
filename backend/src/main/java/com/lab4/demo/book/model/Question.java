@@ -39,4 +39,6 @@ public class Question {
 
 
     private Date date;
+
+    private byte[] image;
 }

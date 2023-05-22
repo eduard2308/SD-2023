@@ -6,6 +6,8 @@ public class UrlMapping {
 
     public static final String ADMIN = "/admin";
 
+    public static final String ANSWERSBYQUESTION = "/answersByQuestion";
+
     public static final String ANSWERS = API_PATH + "/answers";
     public static final String ENTITY = "/{id}";
     public static final String FILTERED = "/filtered";

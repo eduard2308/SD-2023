@@ -1,11 +1,13 @@
 package com.lab4.demo.answer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab4.demo.answer.dto.AnswerDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -22,12 +24,17 @@ public class AnswerService {
         return answerMapper.toDto(answerRepository.save(answer));
     }
 
-    public AnswerDTO edit(Long id, AnswerDTO answerDTO) {
-        Answer answer = findById(id);
-        answer.setText(answerDTO.getText());
-        return answerMapper.toDto(
-                answerRepository.save(answer)
-        );
+    public AnswerDTO edit(String id, MultipartFile image, String answer) {
+        Answer answerObj = findById(Long.parseLong(id));
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            AnswerDTO answerDTO = objectMapper.readValue(answer, AnswerDTO.class);
+            answerObj.setText(answerDTO.getText());
+            answerObj.setImage(image.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return answerMapper.toDto(answerRepository.save(answerObj));
     }
 
     public void delete(Long id) {
@@ -41,6 +48,12 @@ public class AnswerService {
 
     public List<AnswerDTO> findAll() {
         return answerRepository.findAll().stream()
+                .map(answerMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<AnswerDTO> findAllByQuestionId(Long id) {
+        return answerRepository.findAllByQuestionId(id).stream()
                 .map(answerMapper::toDto)
                 .collect(Collectors.toList());
     }

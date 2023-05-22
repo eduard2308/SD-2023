@@ -19,4 +19,5 @@ public class QuestionDTO {
     private String text;
     private User author;
     private Date date;
+    private byte[] image;
 }

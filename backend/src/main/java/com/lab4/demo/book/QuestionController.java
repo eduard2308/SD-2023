@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,14 +39,9 @@ public class QuestionController {
         return itemService.changeName(id, newName);
     }*/
 
-    @PatchMapping(ENTITY)
-    public QuestionDTO edit(@PathVariable Long id, @RequestBody QuestionDTO questionDTO) {
-        return questionService.edit(id, questionDTO);
-    }
-
-    @PatchMapping(ADMIN + ENTITY)
-    public QuestionDTO editAdmin(@PathVariable Long id, @RequestBody QuestionDTO questionDTO) {
-        return questionService.edit(id, questionDTO);
+    @PatchMapping(ADMIN)
+    public QuestionDTO edit(@RequestParam("id") String id, @RequestParam(name = "image") MultipartFile image, @RequestParam(name = "question") String question) {
+        return questionService.edit(id, image, question);
     }
 
     @DeleteMapping(ENTITY)

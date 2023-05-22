@@ -4,12 +4,11 @@
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
           <v-card-title>
-            <span class="headline">Answers</span>
+            <span class="headline">Detailed Answer</span>
           </v-card-title>
-          <h1>{{ this.question.title }}</h1>
-          <h2>{{ this.question.text }}</h2>
+          <h2>{{ this.answer.text }}</h2>
           <v-img
-            :src="'data:image/png;base64,' + this.question.image"
+            :src="'data:image/png;base64,' + this.answer.image"
             height="300px"
           ></v-img>
           <v-card-text>
@@ -26,12 +25,6 @@
                 </v-flex>
               </v-layout>
             </v-container>
-            <v-data-table
-              :headers="headers"
-              :items="items"
-              :search="search"
-              @click:row="seeDetailedAnswer"
-            ></v-data-table>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -40,12 +33,10 @@
 </template>
 <script>
 import api from "../api";
-import router from "@/router";
 export default {
-  name: "AnswerList",
-  data(){
+  name: "DetailedAnswer",
+  data() {
     return {
-      question: null,
       answers: [],
       search: "",
       headers: [
@@ -55,28 +46,18 @@ export default {
           sortable: false,
           value: "text",
         },
-        { text: "Author", value: "author.username" },
-        { text: "Date", value: "date"},
+        { text: "Author", value: "user_id" },
+        { text: "Date", value: "date" },
       ],
       dialogVisible: false,
       selectedItem: {},
     };
   },
-  created() {
-    this.question = this.$route.query.question;
-    this.refreshList();
-  },
   methods: {
-    seeDetailedAnswer(answer) {
-      router.push({
-        path: "/answers/{{ answer.id }}",
-        query: { answer: answer },
-      });
-    },
     async refreshList() {
       this.dialogVisible = false;
-      this.selectedAnswer = {};
-      this.answers = await api.answers.allAnswers();
+      this.selectedItem = {};
+      this.items = await api.items.allItems();
     },
   },
 };

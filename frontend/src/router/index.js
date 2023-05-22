@@ -7,6 +7,7 @@ import QuestionListAdmin from "../views/QuestionListAdmin.vue";
 import { auth as store } from "../store/auth.module";
 import Login from "../views/Login";
 import AnswerListAdmin from "@/views/AnswerListAdmin";
+import DetailedAnswer from "@/views/DetailedAnswer";
 
 Vue.use(VueRouter);
 
@@ -56,6 +57,18 @@ const routes = [
     path: "/questions/:id",
     name: "Answers",
     component: AnswerList,
+    beforeEnter: (to, from, next) => {
+      if (store.state.status.loggedIn) {
+        next();
+      } else {
+        next({ name: "Home" });
+      }
+    },
+  },
+  {
+    path: "/answers/:id",
+    name: "DetailedAnswer",
+    component: DetailedAnswer,
     beforeEnter: (to, from, next) => {
       if (store.state.status.loggedIn) {
         next();

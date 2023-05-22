@@ -1,9 +1,12 @@
 package com.lab4.demo.book;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab4.demo.book.model.Question;
 import com.lab4.demo.book.model.dto.QuestionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,16 +35,19 @@ public class QuestionService {
         ));
     }
 
-    public QuestionDTO edit(Long id, QuestionDTO questionDTO) {
-        Question question = findById(id);
-        question.setTitle(questionDTO.getTitle());
-        question.setAuthor(questionDTO.getAuthor());
-        question.setTag(questionDTO.getTag());
-        question.setText(questionDTO.getText());
-        question.setDate(questionDTO.getDate());
-        return questionMapper.toDto(
-                questionRepository.save(question)
-        );
+    public QuestionDTO edit(String id, MultipartFile image, String question) {
+        Question questionObj = findById(Long.parseLong(id));
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            QuestionDTO questionDTO = objectMapper.readValue(question, QuestionDTO.class);
+            questionObj.setTitle(questionDTO.getTitle());
+            questionObj.setText(questionDTO.getText());
+            questionObj.setTag(questionDTO.getTag());
+            questionObj.setImage(image.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return questionMapper.toDto(questionRepository.save(questionObj));
     }
 
     public QuestionDTO changeTitle(Long id, String newTitle) {

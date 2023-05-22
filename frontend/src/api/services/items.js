@@ -16,7 +16,7 @@ export default {
     );
   },
   edit(item) {
-    return HTTP.patch(BASE_URL + "/items/" + item.id, item, {
+    return HTTP.patch(BASE_URL + "/items/", item, {
       headers: authHeader(),
     }).then((response) => {
       return response.data;
