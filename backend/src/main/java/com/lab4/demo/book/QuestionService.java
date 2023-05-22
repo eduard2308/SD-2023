@@ -3,6 +3,7 @@ package com.lab4.demo.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab4.demo.book.model.Question;
 import com.lab4.demo.book.model.dto.QuestionDTO;
+import com.lab4.demo.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,10 +30,20 @@ public class QuestionService {
                 .collect(Collectors.toList());
     }
 
-    public QuestionDTO create(QuestionDTO bookDTO) {
-        return questionMapper.toDto(questionRepository.save(
-                questionMapper.fromDto(bookDTO)
-        ));
+    public QuestionDTO create(MultipartFile image, String question, String author) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            QuestionDTO questionDTO = objectMapper.readValue(question, QuestionDTO.class);
+            Question questionObj = questionMapper.fromDto(questionDTO);
+            questionObj.setImage(image.getBytes());
+            User user = objectMapper.readValue(author, User.class);
+            questionObj.setUser_id(user.getId());
+            questionObj.setDate(new java.util.Date());
+            return questionMapper.toDto(questionRepository.save(questionObj));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public QuestionDTO edit(String id, MultipartFile image, String question) {

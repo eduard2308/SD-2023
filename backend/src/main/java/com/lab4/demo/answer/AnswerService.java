@@ -19,9 +19,20 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final AnswerMapper answerMapper;
 
-    public AnswerDTO create(AnswerDTO answerDTO) {
-        Answer answer = answerMapper.fromDto(answerDTO);
-        return answerMapper.toDto(answerRepository.save(answer));
+    public AnswerDTO create(MultipartFile image, String answer, String question_id, String user_id) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            AnswerDTO answerDTO = objectMapper.readValue(answer, AnswerDTO.class);
+            Answer answerObj = answerMapper.fromDto(answerDTO);
+            answerObj.setImage(image.getBytes());
+            answerObj.setQuestion_id(Long.parseLong(question_id));
+            answerObj.setUser_id(Long.parseLong(user_id));
+            answerObj.setDate(new java.util.Date());
+            return answerMapper.toDto(answerRepository.save(answerObj));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public AnswerDTO edit(String id, MultipartFile image, String answer) {

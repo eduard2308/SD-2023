@@ -5,6 +5,8 @@
         <v-card>
           <v-card-title>
             <span class="headline">Answers</span>
+            <v-btn @click="addAnswer">Add Answer</v-btn>
+            <v-btn v-if="this.question.author.id === this.$store.getters['auth/getId']" @click="editQuestion">Edit Question</v-btn>
           </v-card-title>
           <h1>{{ this.question.title }}</h1>
           <h2>{{ this.question.text }}</h2>
@@ -32,6 +34,17 @@
               :search="search"
               @click:row="seeDetailedAnswer"
             ></v-data-table>
+            <AddAnswerDialog
+              :opened="dialogVisible"
+              :answer="selectedAnswer"
+              :question="this.question"
+              @refresh="refreshList"
+            ></AddAnswerDialog>
+            <QuestionDialog
+              :opened="dialogQuestionVisible"
+              :item="this.question"
+              @refresh="refreshList"
+            ></QuestionDialog>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -41,12 +54,15 @@
 <script>
 import api from "../api";
 import router from "@/router";
+import AddAnswerDialog from "../components/AddAnswerDialog.vue";
+import QuestionDialog from "../components/QuestionDialog.vue";
 export default {
   name: "AnswerList",
+  components: {AddAnswerDialog, QuestionDialog},
   data(){
     return {
       question: null,
-      answers: [],
+      items: [],
       search: "",
       headers: [
         {
@@ -55,11 +71,12 @@ export default {
           sortable: false,
           value: "text",
         },
-        { text: "Author", value: "author.username" },
+        { text: "Author", value: "user_id" },
         { text: "Date", value: "date"},
       ],
       dialogVisible: false,
-      selectedItem: {},
+      dialogQuestionVisible: false,
+      selectedAnswer: {},
     };
   },
   created() {
@@ -73,10 +90,17 @@ export default {
         query: { answer: answer },
       });
     },
+    addAnswer() {
+      this.dialogVisible = true;
+    },
+    editQuestion() {
+      this.dialogQuestionVisible = true;
+    },
     async refreshList() {
       this.dialogVisible = false;
+      this.dialogQuestionVisible = false;
       this.selectedAnswer = {};
-      this.answers = await api.answers.allAnswers();
+      this.items = await api.answers.allAnswersByQuestion(this.question);
     },
   },
 };

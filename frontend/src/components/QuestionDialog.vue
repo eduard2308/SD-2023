@@ -64,18 +64,19 @@ export default {
     },
     persist() {
       this.formData.set("image", this.imageFile);
-      this.formData.set("id", this.item.id);
       this.formData.set("question", JSON.stringify(this.item));
       if (this.isNew) {
-        api.items
-          .create({
-            title: this.item.title,
-            tag: this.item.tag,
-            text: this.item.text,
-            author: this.$store.getters["auth/getUser"],
-          })
-          .then(() => this.$emit("refresh"));
+        this.formData.set("author", JSON.stringify(
+            {id: this.$store.getters["auth/getId"],
+            username: this.$store.getters["auth/getUsername"],
+            email: this.$store.getters["auth/getEmail"],
+            password: this.$store.getters["auth/getPassword"],
+            roles: null,
+            status: null,}
+        ));
+        api.items.create(this.formData).then(() => this.$emit("refresh"));
       } else {
+        this.formData.set("id", this.item.id);
         api.items.edit(this.formData).then(() => this.$emit("refresh"));
       }
     },

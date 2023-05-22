@@ -30,8 +30,8 @@ public class QuestionController {
     }
 
     @PostMapping
-        public QuestionDTO create(@RequestBody QuestionDTO questionDTO) {
-        return questionService.create(questionDTO);
+        public QuestionDTO create(@RequestParam(name = "image") MultipartFile image, @RequestParam(name = "question") String question, @RequestParam(name = "author") String author) {
+        return questionService.create(image, question, author);
     }
 
     /*@PatchMapping(ENTITY)
@@ -41,6 +41,11 @@ public class QuestionController {
 
     @PatchMapping(ADMIN)
     public QuestionDTO edit(@RequestParam("id") String id, @RequestParam(name = "image") MultipartFile image, @RequestParam(name = "question") String question) {
+        return questionService.edit(id, image, question);
+    }
+
+    @PatchMapping
+    public QuestionDTO editBasic(@RequestParam("id") String id, @RequestParam(name = "image") MultipartFile image, @RequestParam(name = "question") String question) {
         return questionService.edit(id, image, question);
     }
 

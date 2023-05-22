@@ -65,6 +65,24 @@ export const auth = {
     },
     getUser: (state) => {
       return state.user;
-    }
+    },
+    getUsername: (state) => {
+      return state.user.username;
+    },
+    getPassword: (state) => {
+      return state.user.password;
+    },
+    getRoles: (state) => {
+      return state.user.roles;
+    },
+    getStatus: (state) => {
+      return state.user.status;
+    },
+    getEmail: (state) => {
+      return state.user.email;
+    },
+    getId: (state) => {
+      return state.user.id;
+    },
   },
 };

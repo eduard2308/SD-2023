@@ -32,9 +32,14 @@ public class AnswerController {
         return answerService.findAllByQuestionId(id);
     }
 
+    @GetMapping(ANSWERSBYQUESTION + ENTITY)
+    public List<AnswerDTO> allAnswersForQuestionUser(@PathVariable Long id) {
+        return answerService.findAllByQuestionId(id);
+    }
+
     @PostMapping
-    public AnswerDTO create(AnswerDTO answerDTO) {
-        return answerService.create(answerDTO);
+    public AnswerDTO create(@RequestParam(name = "image") MultipartFile image, @RequestParam(name = "answer") String answer, @RequestParam(name = "question_id") String question_id, @RequestParam(name = "user_id") String user_id) {
+        return answerService.create(image, answer, question_id, user_id);
     }
 
     @PatchMapping(ADMIN)
