@@ -90,6 +90,18 @@ const routes = [
     },
   },
   {
+    path: "/answers/admin/:id",
+    name: "DetailedAnswerAdmin",
+    component: DetailedAnswer,
+    beforeEnter: (to, from, next) => {
+        if (store.getters.isAdmin) {
+            next();
+        } else {
+            next({ name: "Home" });
+        }
+    }
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting

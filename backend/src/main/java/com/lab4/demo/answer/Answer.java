@@ -1,6 +1,6 @@
 package com.lab4.demo.answer;
 
-import com.lab4.demo.book.model.Question;
+import com.lab4.demo.question.model.Question;
 import com.lab4.demo.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +37,6 @@ public class Answer {
 
     @Column
     private byte[] image;
+
+    private int votes;
 }

@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-      transition="dialog-bottom-transition"
-      max-width="600"
-      :value="opened"
+    transition="dialog-bottom-transition"
+    max-width="600"
+    :value="opened"
   >
     <template>
       <v-card>
@@ -12,9 +12,9 @@
         <v-form>
           <v-text-field v-model="answer.text" label="Title" />
           <v-file-input
-              v-model="imageFile"
-              label="Image"
-              @change="onFileSelected"
+            v-model="imageFile"
+            label="Image"
+            @change="onFileSelected"
           />
         </v-form>
         <v-card-actions>

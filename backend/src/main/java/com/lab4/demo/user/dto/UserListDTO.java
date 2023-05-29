@@ -17,4 +17,5 @@ public class UserListDTO {
     private String password;
     private Set<String> roles;
     private String statusName;
+    private Double score;
 }

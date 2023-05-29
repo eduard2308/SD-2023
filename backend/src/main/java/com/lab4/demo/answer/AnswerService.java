@@ -2,7 +2,14 @@ package com.lab4.demo.answer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab4.demo.answer.dto.AnswerDTO;
+import com.lab4.demo.question.model.Question;
+import com.lab4.demo.question.model.dto.QuestionDTO;
+import com.lab4.demo.user.UserRepository;
+import com.lab4.demo.user.model.User;
+import com.lab4.demo.votecheck.VoteCheck;
+import com.lab4.demo.votecheck.VoteCheckRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +25,11 @@ import java.util.stream.Collectors;
 public class AnswerService {
     private final AnswerRepository answerRepository;
     private final AnswerMapper answerMapper;
+
+    @Autowired
+    private VoteCheckRepository voteCheckRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public AnswerDTO create(MultipartFile image, String answer, String question_id, String user_id) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -36,7 +48,7 @@ public class AnswerService {
     }
 
     public AnswerDTO edit(String id, MultipartFile image, String answer) {
-        Answer answerObj = findById(Long.parseLong(id));
+        Answer answerObj = answerMapper.fromDto(findById(Long.parseLong(id)));
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             AnswerDTO answerDTO = objectMapper.readValue(answer, AnswerDTO.class);
@@ -52,9 +64,9 @@ public class AnswerService {
         answerRepository.deleteById(id);
     }
 
-    public Answer findById(Long id) {
-        return answerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Answer not found: " + id));
+    public AnswerDTO findById(Long id) {
+        return answerMapper.toDto(answerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Answer not found: " + id)));
     }
 
     public List<AnswerDTO> findAll() {
@@ -69,24 +81,63 @@ public class AnswerService {
                 .collect(Collectors.toList());
     }
 
-    public List<AnswerDTO> findAllByTitleLikeOrTextLike(String text) {
-        return answerRepository.findAllByTextLike(text).stream()
-                .map(answerMapper::toDto)
-                .collect(Collectors.toList());
+    public boolean findByUserIdAndAnswerId(Long userId, Long answerId) {
+        VoteCheck voteCheck = voteCheckRepository.findByUserIdAndAnswerId(userId, answerId);
+        if (voteCheck == null) {
+            return false;
+        }
+        return true;
     }
 
-
-    public List<AnswerDTO> findAllByTitleLike(String text, Sort sorting) {
-        return answerRepository.findAllByTextLike(text, sorting).stream()
-                .map(answerMapper::toDto)
-                .collect(Collectors.toList());
+    public AnswerDTO upVoteAnswer(Long answerId, Long userId) {
+        Answer answerObj = answerMapper.fromDto(findById(answerId));
+        if(!findByUserIdAndAnswerId(userId, answerId)) {
+            VoteCheck voteCheck = new VoteCheck();
+            voteCheck.setUserId(userId);
+            voteCheck.setAnswerId(answerId);
+            updateScoreUser(userId,"up",answerObj);
+            voteCheckRepository.save(voteCheck);
+            answerObj.setVotes(answerObj.getVotes() + 1);
+        }
+        return answerMapper.toDto(answerRepository.save(answerObj));
     }
 
-    public Page<AnswerDTO> findAllByTitleLike(String text, Pageable pageable) {
-        return answerRepository.findAllByTextLike(text, pageable).map(answerMapper::toDto);
+    public AnswerDTO downVoteAnswer(Long answerId, Long userId) {
+        Answer answerObj = answerMapper.fromDto(findById(answerId));
+        if(!findByUserIdAndAnswerId(userId, answerId)) {
+            VoteCheck voteCheck = new VoteCheck();
+            voteCheck.setUserId(userId);
+            voteCheck.setAnswerId(answerId);
+            voteCheckRepository.save(voteCheck);
+            updateScoreUser(userId,"down",answerObj);
+            answerObj.setVotes(answerObj.getVotes() - 1);
+        }
+        return answerMapper.toDto(answerRepository.save(answerObj));
+    }
+    private void updateScoreUser(Long userId, String voteType,Answer answer){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
+        User answerAuthor = userRepository.findById(answer.getUser_id())
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + answer.getUser_id()));
+        if(voteType.equals("up")) {
+            answerAuthor.setScore(answerAuthor.getScore() + 5);
+        } else {
+            answerAuthor.setScore(answerAuthor.getScore() - 2.5);
+            user.setScore(user.getScore() - 1.5);
+        }
+        userRepository.save(answerAuthor);
+        userRepository.save(user);
     }
 
     public AnswerDTO get(Long id) {
-        return answerMapper.toDto(findById(id));
+        return findById(id);
+    }
+
+    public Double getScoreUserByAnswerId(Long id){
+        Answer answer = answerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Answer not found: " + id));
+        User user = userRepository.findById(answer.getUser_id())
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + answer.getUser_id()));
+        return user.getScore();
     }
 }

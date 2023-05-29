@@ -1,6 +1,6 @@
-package com.lab4.demo.book;
+package com.lab4.demo.question;
 
-import com.lab4.demo.book.model.Question;
+import com.lab4.demo.question.model.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

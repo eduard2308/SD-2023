@@ -19,11 +19,10 @@
           <v-text-field v-model="item.date" label="Date" />
         </v-form>
         <v-card-actions>
-          <v-btn @click="persist()"> Save </v-btn>
+          <v-btn @click="persist"> Save </v-btn>
           <v-btn @click="remove" v-if="isNew === false">
             {{ "Delete" }}
           </v-btn>
-          <v-btn @click="seeAnswers"> View Answers </v-btn>
         </v-card-actions>
       </v-card>
     </template>
@@ -32,7 +31,6 @@
 
 <script>
 import api from "../api";
-import router from "@/router";
 
 export default {
   name: "QuestionDialogAdmin",
@@ -60,12 +58,6 @@ export default {
           date: this.item.date,
         })
         .then(() => this.$emit("refresh"));
-    },
-    seeAnswers() {
-      router.push({
-        path: "/questions/admin/{{question.id}}",
-        query: { question: this.item },
-      });
     },
     persist() {
       this.formData.set("image", this.imageFile);

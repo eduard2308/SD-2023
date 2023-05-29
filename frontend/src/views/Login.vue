@@ -86,6 +86,11 @@ export default {
         .dispatch("auth/login", this.login)
 
         .then(() => {
+          if (this.$store.getters["auth/getStatus"] === "BANNED") {
+            alert("You are banned!");
+            this.$store.dispatch("auth/logout");
+            return;
+          } else
           if (this.$store.state.auth.status.loggedIn) {
             if (this.$store.getters["auth/isAdmin"]) {
               router.push("/users");

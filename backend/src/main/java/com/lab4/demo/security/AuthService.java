@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Status;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +38,7 @@ public class AuthService {
                 .username(signUpRequest.getUsername())
                 .password(encoder.encode(signUpRequest.getPassword()))
                 .email(signUpRequest.getEmail())
+                .score(0.0)
                 .build();
 
         Set<String> rolesStr = signUpRequest.getRoles();

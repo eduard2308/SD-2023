@@ -1,10 +1,11 @@
-package com.lab4.demo.book.model;
+package com.lab4.demo.question.model;
 
 import com.lab4.demo.answer.Answer;
 import com.lab4.demo.user.model.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,4 +42,6 @@ public class Question {
     private Date date;
 
     private byte[] image;
+
+    private int votes;
 }

@@ -1,6 +1,6 @@
-package com.lab4.demo.book;
+package com.lab4.demo.question;
 
-import com.lab4.demo.book.model.dto.QuestionDTO;
+import com.lab4.demo.question.model.dto.QuestionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +54,16 @@ public class QuestionController {
         questionService.delete(id);
     }
 
+    @PatchMapping(ENTITY + UPVOTE)
+    public QuestionDTO upVoteQuestion(@PathVariable Long id, @RequestParam Long userId) {
+        return questionService.upVoteQuestion(id, userId);
+    }
+
+    @PatchMapping(ENTITY + DOWNVOTE)
+    public QuestionDTO downVoteQuestion(@PathVariable Long id, @RequestParam Long userId) {
+        return questionService.downVoteQuestion(id, userId);
+    }
+
     @DeleteMapping(ADMIN + ENTITY)
     public ResponseEntity<?> deleteAdmin(@PathVariable("id") Long id){
         questionService.delete(id);
@@ -64,5 +74,11 @@ public class QuestionController {
     public QuestionDTO getQuestion(@PathVariable Long id) {
         return questionService.get(id);
     }
+
+    @GetMapping(ENTITY +"/scoreUser")
+    public Double getScoreUser(@PathVariable Long id) {
+        return questionService.getScoreUserByQuestionId(id);
+    }
+
 
 }

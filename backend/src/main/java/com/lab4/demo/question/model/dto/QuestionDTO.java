@@ -1,4 +1,4 @@
-package com.lab4.demo.book.model.dto;
+package com.lab4.demo.question.model.dto;
 
 import com.lab4.demo.user.model.User;
 import lombok.AllArgsConstructor;
@@ -20,4 +20,5 @@ public class QuestionDTO {
     private User author;
     private Date date;
     private byte[] image;
+    private int votes;
 }

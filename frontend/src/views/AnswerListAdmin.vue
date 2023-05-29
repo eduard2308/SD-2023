@@ -5,6 +5,8 @@
         <v-card>
           <v-card-title>
             <span class="headline">Answers</span>
+            <v-btn @click="editQuestion">Edit Question</v-btn>
+            <v-btn @click="deleteQuestion">Delete Question</v-btn>
           </v-card-title>
           <h1>{{ this.question.title }}</h1>
           <h2>{{ this.question.text }}</h2>
@@ -28,15 +30,20 @@
             </v-container>
             <v-data-table
               :headers="headers"
-              :items="answers"
+              :items="items"
               :search="search"
-              @click:row="editAnswer"
+              @click:row="seeDetailedAnswer"
             ></v-data-table>
             <AnswerDialog
               :opened="dialogVisible"
               :answer="selectedAnswer"
               @refresh="refreshList"
             ></AnswerDialog>
+            <QuestionDialogAdmin
+              :opened="dialogQuestionVisible"
+              :item="this.question"
+              @refresh="refreshList"
+            ></QuestionDialogAdmin>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -47,15 +54,18 @@
 <script>
 import api from "../api";
 import AnswerDialog from "../components/AnswerDialog.vue";
+import QuestionDialogAdmin from "@/components/QuestionDialogAdmin";
+import router from "@/router";
 export default {
   name: "AnswerListAdmin",
   components: {
     AnswerDialog,
+    QuestionDialogAdmin,
   },
   data() {
     return {
       question: null,
-      answers: [],
+      items: [],
       search: "",
       headers: [
         {
@@ -68,18 +78,28 @@ export default {
         { text: "Date", value: "date" },
       ],
       dialogVisible: false,
+      dialogQuestionVisible: false,
       selectedAnswer: {},
     };
   },
   methods: {
-    editAnswer(answer) {
-      this.selectedAnswer = answer;
-      this.dialogVisible = true;
+    seeDetailedAnswer(answer) {
+      router.push({
+        path: "/answers/admin/{{answer.id}}",
+        query: { answer: answer },
+      });
+    },
+    editQuestion() {
+      this.dialogQuestionVisible = true;
+    },
+    async deleteQuestion() {
+      await api.itemsAdmin.remove(this.question);
+      router.push({ path: "/questions/admin" });
     },
     async refreshList() {
       this.dialogVisible = false;
       this.selectedAnswer = {};
-      this.answers = await api.answersAdmin.allAnswersByQuestion(this.question);
+      this.items = await api.answersAdmin.allAnswersByQuestion(this.question);
     },
   },
   created() {

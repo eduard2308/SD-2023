@@ -1,8 +1,7 @@
 package com.lab4.demo;
 
 import com.lab4.demo.answer.AnswerRepository;
-import com.lab4.demo.book.QuestionRepository;
-import com.lab4.demo.book.QuestionService;
+import com.lab4.demo.question.QuestionRepository;
 import com.lab4.demo.security.AuthService;
 import com.lab4.demo.security.dto.SignupRequest;
 import com.lab4.demo.user.RoleRepository;

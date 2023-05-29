@@ -7,9 +7,13 @@
             <span class="headline">Answers</span>
             <v-btn @click="addAnswer">Add Answer</v-btn>
             <v-btn v-if="this.question.author.id === this.$store.getters['auth/getId']" @click="editQuestion">Edit Question</v-btn>
+            <v-btn v-if="this.question.author.id === this.$store.getters['auth/getId']" @click="deleteQuestion">Delete Question</v-btn>
+            <v-btn v-if="this.question.author.id !== this.$store.getters['auth/getId']" @click="upVoteQuestion">Upvote Question</v-btn>
+            <v-btn v-if="this.question.author.id !== this.$store.getters['auth/getId']" @click="downVoteQuestion">Down-vote Question</v-btn>
           </v-card-title>
           <h1>{{ this.question.title }}</h1>
           <h2>{{ this.question.text }}</h2>
+          <h3>Author score: {{this.score}}</h3>
           <v-img
             :src="'data:image/png;base64,' + this.question.image"
             height="300px"
@@ -76,6 +80,7 @@ export default {
       ],
       dialogVisible: false,
       dialogQuestionVisible: false,
+      score: 0,
       selectedAnswer: {},
     };
   },
@@ -96,11 +101,24 @@ export default {
     editQuestion() {
       this.dialogQuestionVisible = true;
     },
+    downVoteQuestion() {
+      api.items.downVote(this.question, this.$store.getters['auth/getId']);
+    },
+    upVoteQuestion() {
+      api.items.upVote(this.question, this.$store.getters['auth/getId']);
+    },
+    async deleteQuestion() {
+      await api.items.remove(this.question);
+      router.push({
+        path: "/questions",
+      });
+    },
     async refreshList() {
       this.dialogVisible = false;
       this.dialogQuestionVisible = false;
       this.selectedAnswer = {};
       this.items = await api.answers.allAnswersByQuestion(this.question);
+      this.score = await api.items.getUserScore(this.question);
     },
   },
 };

@@ -10,6 +10,7 @@
         <v-form>
           <v-text-field v-model="user.username" label="Username" />
           <v-text-field v-model="user.email" label="Email" />
+          <v-text-field v-model="user.statusName" label="Status" />
         </v-form>
         <v-card-actions>
           <v-btn @click="persist()"> Save </v-btn>
@@ -48,6 +49,7 @@ export default {
           id: this.user.id,
           username: this.user.username,
           email: this.user.email,
+          statusName: this.user.statusName,
         })
         .then(() => this.$emit("refresh"));
     },

@@ -48,6 +48,8 @@ export default {
         { text: "Author", value: "author.username" },
         { text: "Tag", value: "tag"},
         { text: "Text", value: "text" },
+        { text: "Votes", value: "votes"},
+        { text: "Date", value: "date" },
       ],
       dialogVisible: false,
       selectedItem: {},

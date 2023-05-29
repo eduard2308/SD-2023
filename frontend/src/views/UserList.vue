@@ -46,7 +46,8 @@ export default {
         },
         { text: "Email", value: "email" },
         { text: "Password", value: "password" },
-        { text: "Status", value: "statusName"}
+        { text: "Status", value: "statusName"},
+        { text: "Score", value: "score" },
       ],
       dialogVisible: false,
       selectedUser: {},

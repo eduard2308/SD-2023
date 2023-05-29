@@ -13,4 +13,5 @@ public class SignupRequest {
     private String password;
     private Set<String> roles;
     private String status;
+    private Double score;
 }

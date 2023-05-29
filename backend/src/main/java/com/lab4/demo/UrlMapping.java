@@ -9,7 +9,10 @@ public class UrlMapping {
     public static final String ANSWERSBYQUESTION = "/answersByQuestion";
 
     public static final String ANSWERS = API_PATH + "/answers";
+    public static final String DETAILEDANSWER = "/answerById";
     public static final String ENTITY = "/{id}";
+    public static final String UPVOTE = "/upvote";
+    public static final String DOWNVOTE = "/downvote";
     public static final String FILTERED = "/filtered";
 
     public static final String AUTH = API_PATH + "/auth";

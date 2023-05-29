@@ -1,7 +1,5 @@
 package com.lab4.demo.answer.dto;
 
-import com.lab4.demo.book.model.Question;
-import com.lab4.demo.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +18,5 @@ public class AnswerDTO {
     private Long user_id;
     private Date date;
     private byte[] image;
+    private int votes;
 }

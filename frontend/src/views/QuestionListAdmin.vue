@@ -16,7 +16,7 @@
       :headers="headers"
       :items="items"
       :search="search"
-      @click:row="editItem"
+      @click:row="seeAnswers"
     ></v-data-table>
     <QuestionDialogAdmin
       :opened="dialogVisible"
@@ -47,15 +47,18 @@ export default {
         { text: "Author", value: "author.username" },
         { text: "Tag", value: "tag"},
         { text: "Text", value: "text" },
+        { text: "Date", value: "date" },
       ],
       dialogVisible: false,
       selectedItem: {},
     };
   },
   methods: {
-    editItem(item) {
-      this.selectedItem = item;
-      this.dialogVisible = true;
+    seeAnswers(question) {
+      this.$router.push({
+        path: "/questions/admin/{{question.id}}",
+        query: { question: question },
+      });
     },
     async refreshList() {
       this.dialogVisible = false;

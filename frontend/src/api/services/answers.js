@@ -17,26 +17,69 @@ export default {
     });
   },
 
+  answerById(answer) {
+    return HTTP.get(BASE_URL + "/answers/answerById/" + answer.id, {
+      headers: authHeader(),
+    }).then((response) => {
+      return response.data;
+    });
+  },
+
   create(answer) {
-    return HTTP.post(BASE_URL + "/answers", answer, { headers: authHeader() }).then(
-        (response) => {
-          return response.data;
-        }
-    );
-    },
+    return HTTP.post(BASE_URL + "/answers", answer, {
+      headers: authHeader(),
+    }).then((response) => {
+      return response.data;
+    });
+  },
 
   edit(answer) {
-    return HTTP.patch(BASE_URL + "/answers/admin", answer, {
+    return HTTP.patch(BASE_URL + "/answers", answer, {
       headers: authHeader(),
     }).then((response) => {
       return response.data;
     });
   },
   remove(answer) {
-    return HTTP.delete(BASE_URL + "/answers/admin/" + answer.id, {
+    return HTTP.delete(BASE_URL + "/answers/" + answer.id, {
       headers: authHeader(),
     }).then((response) => {
       return response.data;
     });
   },
+  downVote(answer, iduser) {
+    return HTTP.patch(
+      BASE_URL + "/answers/" + answer.id + "/downvote",
+      answer,
+      {
+        headers: authHeader(),
+        params: {
+          userId: iduser,
+        },
+      }
+    ).then((response) => {
+      return response.data;
+    });
+  },
+  upVote(answer, iduser) {
+    return HTTP.patch(
+      BASE_URL + "/answers/" + answer.id + "/upvote",
+      answer,
+      {
+        headers: authHeader(),
+        params: {
+          userId: iduser,
+        },
+      }
+    ).then((response) => {
+      return response.data;
+    });
+  },
+  getUserScore(answer) {
+    return HTTP.get(BASE_URL + "/answers/" + answer.id + "/userScore", {
+      headers: authHeader(),
+    }).then((response) => {
+      return response.data;
+    });
+  }
 };

@@ -1,7 +1,7 @@
-package com.lab4.demo.book;
+package com.lab4.demo.question;
 
-import com.lab4.demo.book.model.Question;
-import com.lab4.demo.book.model.dto.QuestionDTO;
+import com.lab4.demo.question.model.Question;
+import com.lab4.demo.question.model.dto.QuestionDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
